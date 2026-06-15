@@ -78,7 +78,7 @@ public class Calendar {
                 .filter(e -> e.getDate().isAfter(now))
                 .sorted((e1, e2) -> e1.getDate().compareTo(e2.getDate()))
                 .limit(limit)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<Event> getPast(int limit) throws IOException {
@@ -88,6 +88,6 @@ public class Calendar {
                 .filter(e -> e.getDate().isBefore(now))
                 .sorted((e1, e2) -> e2.getDate().compareTo(e1.getDate()))
                 .limit(limit)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

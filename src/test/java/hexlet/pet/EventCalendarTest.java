@@ -5,23 +5,23 @@ import hexlet.pet.calendar.Event;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class EventCalendarTest {
+class EventCalendarTest {
 
     private Calendar calendar;
     private Path tempFile;
 
     @BeforeEach
     void setUp() throws IOException {
-        tempFile = Files.createTempFile("test", ".json");
+        tempFile = Files.createTempFile("calendar", ".json");
         calendar = new Calendar(tempFile.toString());
     }
 
@@ -30,78 +30,140 @@ public class EventCalendarTest {
         Files.deleteIfExists(tempFile);
     }
 
-    @Test
-    public void testEventCalendar() throws IOException {
-        var name = "this is test event";
-        var date = LocalDateTime.of(2000, 3, 12, 0, 0);
 
-        calendar.add(name, date);
-        List<Event> events = calendar.getPast(1);
-        String expectedMessage = "this is test event (ID: " + events.get(0).getId() + ") - 2000-03-12T00:00";
-        assertEquals(expectedMessage,  events.get(0).toString());
+    @Test
+    void emptyCalendarReturnsEmptyLists() throws IOException {
+        assertTrue(calendar.getPast(10).isEmpty());
+        assertTrue(calendar.getUpcoming(10).isEmpty());
+    }
+
+
+    @Test
+    void addSinglePastEvent() throws IOException {
+        LocalDateTime date = LocalDateTime.of(2000, 1, 1, 0, 0);
+        calendar.add("New Year", date);
+        List<Event> past = calendar.getPast(5);
+        assertEquals(1, past.size());
+        assertEquals("New Year", past.get(0).getName());
+        assertEquals(date, past.get(0).getDate());
     }
 
     @Test
-    public void testEventCalendar2() throws IOException {
-        var name = "this is test event";
-        var date = LocalDateTime.of(2050, 3, 12, 0, 0);
-
-
-        calendar.add(name, date);
-        List<Event> events = calendar.getUpcoming(1);
-        String expectedMessage = "this is test event (ID: " + events.get(0).getId() + ") - 2050-03-12T00:00";
-        assertEquals(expectedMessage,  events.get(0).toString());
+    void addSingleUpcomingEvent() throws IOException {
+        LocalDateTime date = LocalDateTime.now().plusDays(5);
+        calendar.add("Meeting", date);
+        List<Event> upcoming = calendar.getUpcoming(5);
+        assertEquals(1, upcoming.size());
+        assertEquals("Meeting", upcoming.get(0).getName());
+        assertEquals(date, upcoming.get(0).getDate());
     }
 
     @Test
-    public void testEventCalendar3() throws IOException {
-        var name = "this is test event";
-        var date = LocalDateTime.of(2000, 3, 12, 0, 0);
-
-        calendar.add(name, date);
-        List<Event> events = calendar.getPast(1);
-        String expectedMessage = "this is test event (ID: " + events.get(0).getId() + ") - 2000-03-12T00:00";
-        assertEquals(expectedMessage,  events.get(0).toString());
-
-        calendar.removeById(events.get(0).getId());
-        List<Event> events2 = calendar.getPast(1);
-        assertTrue(events2.isEmpty());
+    void pastEventsOrderedNewestFirst() throws IOException {
+        LocalDateTime now = LocalDateTime.now();
+        calendar.add("old", now.minusYears(2));
+        calendar.add("middle", now.minusYears(1));
+        calendar.add("recent", now.minusDays(1));
+        List<Event> past = calendar.getPast(10);
+        assertEquals(3, past.size());
+        assertEquals("recent", past.get(0).getName());
+        assertEquals("middle", past.get(1).getName());
+        assertEquals("old", past.get(2).getName());
     }
 
     @Test
-    public void testEventCalendar4() throws IOException {
-        var name = "this is test event";
-        var date = LocalDateTime.of(2000, 3, 12, 0, 0);
-
-        calendar.add(name, date);
-        List<Event> events = calendar.getPast(1);
-        String expectedMessage = "this is test event (ID: " + events.get(0).getId() + ") - 2000-03-12T00:00";
-        assertEquals(expectedMessage,  events.get(0).toString());
-
-        calendar.removeByName(name);
-        List<Event> events2 = calendar.getPast(1);
-        assertTrue(events2.isEmpty());
-
+    void upcomingEventsOrderedSoonestFirst() throws IOException {
+        LocalDateTime now = LocalDateTime.now();
+        calendar.add("far", now.plusMonths(2));
+        calendar.add("soon", now.plusDays(1));
+        calendar.add("mid", now.plusWeeks(1));
+        List<Event> upcoming = calendar.getUpcoming(10);
+        assertEquals(3, upcoming.size());
+        assertEquals("soon", upcoming.get(0).getName());
+        assertEquals("mid", upcoming.get(1).getName());
+        assertEquals("far", upcoming.get(2).getName());
     }
 
     @Test
-    public void testEventCalendar5() throws IOException {
-        calendar.add("one", LocalDateTime.of(2000, 3, 12, 0, 0));
-        calendar.add("two", LocalDateTime.of(2004, 3, 12, 0, 0));
-        calendar.add("three", LocalDateTime.of(2005, 3, 12, 0, 0));
+    void limitPastEvents() throws IOException {
+        for (int i = 1; i <= 5; i++) {
+            calendar.add("event" + i, LocalDateTime.now().minusDays(i));
+        }
+        List<Event> past = calendar.getPast(2);
+        assertEquals(2, past.size());
+    }
 
-        List<Event> events = calendar.getPast(3);
-        String expectedMessage1 = events.get(0).toString();
-        assertEquals(expectedMessage1, events.get(0).toString());
+    @Test
+    void limitUpcomingEvents() throws IOException {
+        for (int i = 1; i <= 5; i++) {
+            calendar.add("event" + i, LocalDateTime.now().plusDays(i));
+        }
+        List<Event> upcoming = calendar.getUpcoming(3);
+        assertEquals(3, upcoming.size());
+    }
 
-        String expectedMessage2 = events.get(1).toString();
-        assertEquals(expectedMessage2, events.get(1).toString());
+    @Test
+    void removeById() throws IOException {
+        calendar.add("toRemove", LocalDateTime.now());
+        Event event = calendar.getPast(10).get(0);
+        assertTrue(calendar.removeById(event.getId()));
+        assertTrue(calendar.getPast(10).isEmpty());
+    }
 
-        String expectedMessage3 = events.get(2).toString();
-        assertEquals(expectedMessage3, events.get(2).toString());
+    @Test
+    void removeByIdNotFound() throws IOException {
+        boolean removed = calendar.removeById("non-existent-id");
+        assertFalse(removed);
+    }
 
+    @Test
+    void removeByName() throws IOException {
+        calendar.add("unique", LocalDateTime.now().plusDays(1));
+        assertTrue(calendar.removeByName("unique"));
+        assertTrue(calendar.getUpcoming(10).isEmpty());
+    }
+
+    @Test
+    void removeByNameNotFound() throws IOException {
+        boolean removed = calendar.removeByName("not-there");
+        assertFalse(removed);
+    }
+
+    @Test
+    void removeByNameRemovesAllWithSameName() throws IOException {
+        LocalDateTime now = LocalDateTime.now();
+        calendar.add("birthday", now);
+        calendar.add("birthday", now.plusDays(1));
+        calendar.add("other", now.plusDays(2));
+        assertEquals(2, calendar.getUpcoming(10).size());
+        calendar.removeByName("birthday");
+        List<Event> remaining = calendar.getUpcoming(10);
+        assertEquals(1, remaining.size());
+        assertEquals("other", remaining.get(0).getName());
+    }
+
+    @Test
+    void clearNonEmptyCalendar() throws IOException {
+        calendar.add("test", LocalDateTime.now());
+        assertFalse(calendar.getPast(10).isEmpty());
         calendar.clear();
-        List<Event> events2 = calendar.getPast(3);
-        assertTrue(events2.isEmpty());
+        assertTrue(calendar.getPast(10).isEmpty());
+    }
+
+    @Test
+    void clearEmptyCalendar() throws IOException {
+        calendar.clear();
+        assertTrue(calendar.getPast(10).isEmpty());
+    }
+
+    @Test
+    void duplicateNamesAllowed() throws IOException {
+        LocalDateTime now = LocalDateTime.now();
+        calendar.add("meeting", now.plusDays(1));
+        calendar.add("meeting", now.plusDays(2));
+        List<Event> upcoming = calendar.getUpcoming(10);
+        assertEquals(2, upcoming.size());
+        assertEquals("meeting", upcoming.get(0).getName());
+        assertEquals("meeting", upcoming.get(1).getName());
     }
 }
