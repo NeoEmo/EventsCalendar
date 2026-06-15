@@ -1,1 +1,7 @@
-1
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=NeoEmo_EventsCalendar&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=NeoEmo_EventsCalendar)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=NeoEmo_EventsCalendar&metric=bugs)](https://sonarcloud.io/summary/new_code?id=NeoEmo_EventsCalendar)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=NeoEmo_EventsCalendar&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=NeoEmo_EventsCalendar)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=NeoEmo_EventsCalendar&metric=coverage)](https://sonarcloud.io/summary/new_code?id=NeoEmo_EventsCalendar)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=NeoEmo_EventsCalendar&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=NeoEmo_EventsCalendar)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=NeoEmo_EventsCalendar&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=NeoEmo_EventsCalendar)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=NeoEmo_EventsCalendar&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=NeoEmo_EventsCalendar)
