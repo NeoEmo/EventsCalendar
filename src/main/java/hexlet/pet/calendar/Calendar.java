@@ -3,11 +3,11 @@ package hexlet.pet.calendar;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ public class Calendar {
     private final String filePath;
 
     public Calendar(String filePath) {
-        this.filePath = Paths.get("src", "main", "resources", filePath).toAbsolutePath().toString();
+        this.filePath = filePath;
         this.mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -30,7 +30,11 @@ public class Calendar {
         if (!file.exists()) {
             return new ArrayList<>();
         }
-        return mapper.readValue(file, new TypeReference<List<Event>>() { });
+        try {
+            return mapper.readValue(file, new TypeReference<List<Event>>() { });
+        } catch (MismatchedInputException e) {
+            return new ArrayList<>();
+        }
     }
 
     private void saveEvents(List<Event> events) throws IOException {
