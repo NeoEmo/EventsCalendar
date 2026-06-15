@@ -30,14 +30,14 @@ class EventCalendarTest {
         Files.deleteIfExists(tempFile);
     }
 
-
+    // ========== 1. Пустой календарь ==========
     @Test
     void emptyCalendarReturnsEmptyLists() throws IOException {
         assertTrue(calendar.getPast(10).isEmpty());
         assertTrue(calendar.getUpcoming(10).isEmpty());
     }
 
-
+    // ========== 2. Добавление одного события ==========
     @Test
     void addSinglePastEvent() throws IOException {
         LocalDateTime date = LocalDateTime.of(2000, 1, 1, 0, 0);
@@ -58,6 +58,7 @@ class EventCalendarTest {
         assertEquals(date, upcoming.get(0).getDate());
     }
 
+    // ========== 3. Порядок сортировки ==========
     @Test
     void pastEventsOrderedNewestFirst() throws IOException {
         LocalDateTime now = LocalDateTime.now();
@@ -84,6 +85,7 @@ class EventCalendarTest {
         assertEquals("far", upcoming.get(2).getName());
     }
 
+    // ========== 4. Лимиты ==========
     @Test
     void limitPastEvents() throws IOException {
         for (int i = 1; i <= 5; i++) {
@@ -103,6 +105,21 @@ class EventCalendarTest {
     }
 
     @Test
+    void zeroLimit() throws IOException {
+        calendar.add("Test", LocalDateTime.now().plusDays(1));
+        assertTrue(calendar.getUpcoming(0).isEmpty());
+        assertTrue(calendar.getPast(0).isEmpty());
+    }
+
+    @Test
+    void limitGreaterThanEventCount() throws IOException {
+        calendar.add("One", LocalDateTime.now().plusDays(1));
+        List<Event> upcoming = calendar.getUpcoming(100);
+        assertEquals(1, upcoming.size());
+    }
+
+    // ========== 5. Удаление по ID ==========
+    @Test
     void removeById() throws IOException {
         calendar.add("toRemove", LocalDateTime.now());
         Event event = calendar.getPast(10).get(0);
@@ -116,6 +133,7 @@ class EventCalendarTest {
         assertFalse(removed);
     }
 
+    // ========== 6. Удаление по имени ==========
     @Test
     void removeByName() throws IOException {
         calendar.add("unique", LocalDateTime.now().plusDays(1));
@@ -142,6 +160,7 @@ class EventCalendarTest {
         assertEquals("other", remaining.get(0).getName());
     }
 
+    // ========== 7. Очистка ==========
     @Test
     void clearNonEmptyCalendar() throws IOException {
         calendar.add("test", LocalDateTime.now());
@@ -156,6 +175,7 @@ class EventCalendarTest {
         assertTrue(calendar.getPast(10).isEmpty());
     }
 
+    // ========== 8. Дубликаты имён ==========
     @Test
     void duplicateNamesAllowed() throws IOException {
         LocalDateTime now = LocalDateTime.now();
@@ -165,5 +185,15 @@ class EventCalendarTest {
         assertEquals(2, upcoming.size());
         assertEquals("meeting", upcoming.get(0).getName());
         assertEquals("meeting", upcoming.get(1).getName());
+    }
+
+    // ========== 9. Обработка пустого файла (MismatchedInputException) ==========
+    @Test
+    void loadEventsWithEmptyFile() throws IOException {
+        // Очищаем временный файл, делаем его пустым
+        Files.writeString(tempFile, "");
+        // Любой метод, вызывающий loadEvents, должен вернуть пустой список, а не упасть
+        List<Event> events = calendar.getPast(10);
+        assertTrue(events.isEmpty());
     }
 }

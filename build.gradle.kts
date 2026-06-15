@@ -63,4 +63,11 @@ tasks.jacocoTestReport {
     reports {
         xml.required = true
     }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.map {
+            fileTree(it) {
+                exclude("**/Event.class")
+            }
+        }))
+    }
 }
