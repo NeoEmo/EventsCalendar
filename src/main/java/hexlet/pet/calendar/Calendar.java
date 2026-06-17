@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Calendar {
     private final ObjectMapper mapper;
@@ -88,5 +89,13 @@ public class Calendar {
                 .sorted((e1, e2) -> e2.getDate().compareTo(e1.getDate()))
                 .limit(limit)
                 .toList();
+    }
+
+    public Optional<String> getIdByName(String name) throws IOException {
+        List<Event> events = loadEvents();
+        return events.stream()
+                .filter(e -> e.getName().equals(name))
+                .findFirst()
+                .map(Event::getId);
     }
 }
