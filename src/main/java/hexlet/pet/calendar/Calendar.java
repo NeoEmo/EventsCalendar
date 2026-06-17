@@ -91,7 +91,8 @@ public class Calendar {
                 .toList();
     }
 
-    public Optional<String> getIdByName(String name) throws IOException {
+
+    Optional<String> getIdByName(String name) throws IOException {
         List<Event> events = loadEvents();
         return events.stream()
                 .filter(e -> e.getName().equals(name))

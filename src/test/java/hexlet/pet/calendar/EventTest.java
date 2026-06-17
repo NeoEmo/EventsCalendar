@@ -1,6 +1,5 @@
-package hexlet.pet;
+package hexlet.pet.calendar;
 
-import hexlet.pet.calendar.Event;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
