@@ -59,7 +59,9 @@ public class EventTest {
         assertEquals(name, event.getName());
         assertEquals(date, event.getDate());
 
-        var id = event.getId();
+        var id = "my personal ID";
+        event.setId(id);
         var toString = name + " (ID: " + id + ") - " + date;
+        assertEquals(toString, event.toString());
     }
 }
