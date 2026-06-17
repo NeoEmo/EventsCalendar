@@ -129,6 +129,7 @@ public class App implements  Runnable {
                         System.out.println("No upcoming events found.");
                     }
                     break;
+
                 default:
                     System.err.println("Error: invalid command line options");
             }
