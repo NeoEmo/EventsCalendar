@@ -58,4 +58,23 @@ public class CalendarTest {
         assertTrue(calendar.removeByName(name2));
         assertFalse(calendar.removeByName(name2));
     }
+
+    @Test
+    public void getPastUpcomingTest() throws IOException {
+        var name = "my past test name";
+        var date =  LocalDateTime.now().minusMonths(1);
+        var name2 = "my upcoming test name";
+        var date2 =  LocalDateTime.now().plusMonths(1);
+        calendar.add(name, date);
+        calendar.add(name2, date2);
+
+        String id = calendar.getIdByName(name).orElseThrow();
+        String id2 = calendar.getIdByName(name2).orElseThrow();
+
+        String toString = "[" + name + " (ID: " + id + ") - " + date + "]";
+        String toString2 = "[" + name2 + " (ID: " + id2 + ") - " + date2 + "]";
+
+        assertEquals(toString, calendar.getPast(1).toString());
+        assertEquals(toString2, calendar.getUpcoming(1).toString());
+    }
 }
