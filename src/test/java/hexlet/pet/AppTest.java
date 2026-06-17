@@ -89,4 +89,38 @@ public class AppTest {
         events = calendar.getUpcoming(3);
         assertEquals(0, events.size());
     }
+
+    @Test
+    public void testRemoveBy() throws IOException {
+        var name = "my test upcoming event";
+        var date = LocalDate.now().plusMonths(1);
+        String[] args = {"-a", "-n", name, "-d", date.toString(), "-f", filePath};
+        int exitCode = new CommandLine(new App()).execute(args);
+        Assertions.assertEquals(0, exitCode);
+
+        var name2 = "my test past event";
+        var date2 = LocalDate.now().minusMonths(1);
+        String[] args2 = {"-a", "-n", name2, "-d", date2.toString(), "-f", filePath};
+        int exitCode2 = new CommandLine(new App()).execute(args2);
+        Assertions.assertEquals(0, exitCode2);
+
+        Calendar calendar = new Calendar(filePath);
+        List<Event> upcomingEvents = calendar.getUpcoming(5);
+        List<Event> pastEvents = calendar.getPast(5);
+        assertEquals(1, upcomingEvents.size());
+        assertEquals(1, pastEvents.size());
+
+        var id  = upcomingEvents.get(0).getId();
+        String[] args3 = {"-r", id, "-f", filePath};
+        int exitCode3 = new CommandLine(new App()).execute(args3);
+        Assertions.assertEquals(0, exitCode3);
+        upcomingEvents = calendar.getUpcoming(5);
+        assertEquals(0, upcomingEvents.size());
+
+        String[] args4 = {"-rn", name2, "-f", filePath};
+        int exitCode4 = new CommandLine(new App()).execute(args4);
+        Assertions.assertEquals(0, exitCode4);
+        upcomingEvents = calendar.getUpcoming(5);
+        assertEquals(0, upcomingEvents.size());
+    }
 }
