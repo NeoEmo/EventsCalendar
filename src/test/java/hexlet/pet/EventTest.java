@@ -34,7 +34,7 @@ public class EventTest {
         var toString = name + " (ID: " + id + ") - " + date;
         assertEquals(toString, event.toString());
     }
-    
+
     @Test
     public void testEvent3() {
         String name = "";
@@ -46,5 +46,20 @@ public class EventTest {
         var id = event.getId();
         var toString = name + " (ID: " + id + ") - " + date;
         assertEquals(toString, event.toString());
+    }
+
+    @Test
+    public void testEvent4() {
+        var name = "this is a test name";
+        var date = LocalDateTime.now();
+        Event event = new Event();
+
+        event.setName(name);
+        event.setDate(date);
+        assertEquals(name, event.getName());
+        assertEquals(date, event.getDate());
+
+        var id = event.getId();
+        var toString = name + " (ID: " + id + ") - " + date;
     }
 }
