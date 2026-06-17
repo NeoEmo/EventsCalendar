@@ -53,70 +53,85 @@ public class App implements  Runnable {
 
     @Override
     public void run() {
+        String mode;
+
+        if (add) {
+            mode = "add";
+        } else if (clear) {
+            mode = "clear";
+        } else if (removeId != null && !removeId.isBlank()) {
+            mode = "removeId";
+        } else if (removeName != null && !removeName.isBlank()) {
+            mode = "removeName";
+        } else {
+            mode = "show";
+        }
+
         try {
             Calendar calendar = new Calendar(filePath);
-            if (add) {
-                if (name == null || date == null) {
-                    System.err.println("Error: --add requires --name and --date");
-                    System.exit(1);
-                }
-                LocalDateTime dateTime = date.atStartOfDay();
-                calendar.add(name, dateTime);
-                System.out.println("Event added: " + name + " on " + dateTime);
-                return;
+            switch (mode) {
+                case "add":
+                    if (name == null || date == null) {
+                        System.err.println("Error: --add requires --name and --date");
+                        System.exit(1);
+                    }
+                    LocalDateTime dateTime = date.atStartOfDay();
+                    calendar.add(name, dateTime);
+                    System.out.println("Event added: " + name + " on " + dateTime);
+                    break;
+
+                case "clear":
+                    calendar.clear();
+                    System.out.println("All events are removed.");
+                    break;
+
+                case "removeId":
+                    boolean removed = calendar.removeById(removeId);
+                    if (removed) {
+                        System.out.println("Event with ID " + removeId + " removed.");
+                    } else  {
+                        System.out.println("Event with ID " + removeId + " not found.");
+                        System.exit(1);
+                    }
+                    break;
+
+                case "removeName":
+                    boolean removedName = calendar.removeByName(removeName);
+                    if (removedName) {
+                        System.out.println("Event with name " + removeName + " removed.");
+                    } else {
+                        System.out.println("Event with name " + removeName + " not found.");
+                        System.exit(1);
+                    }
+                    break;
+
+                case "show":
+                    List<Event> pastEvents = calendar.getPast(past);
+                    List<Event> upcomingEvents = calendar.getUpcoming(show);
+
+                    if (!pastEvents.isEmpty()) {
+                        System.out.println("Past " + pastEvents.size() + " events:");
+                        for (int i = 0; i < pastEvents.size(); i++) {
+                            Event pastEvent = pastEvents.get(i);
+                            System.out.println(i + 1 + ". " + pastEvent.toString());
+                        }
+                    } else {
+                        System.out.println("No past events found.");
+                    }
+
+                    if (!upcomingEvents.isEmpty()) {
+                        System.out.println("Upcoming " + upcomingEvents.size() + " events:");
+                        for (int i = 0; i < upcomingEvents.size(); i++) {
+                            Event upcomingEvent = upcomingEvents.get(i);
+                            System.out.println(i + 1 + ". " + upcomingEvent.toString());
+                        }
+                    } else  {
+                        System.out.println("No upcoming events found.");
+                    }
+                    break;
+                default:
+                    System.err.println("Error: invalid command line options");
             }
-
-            if (clear) {
-                calendar.clear();
-                System.out.println("All events are removed.");
-                return;
-            }
-
-            if (removeId != null && !removeId.isBlank()) {
-                boolean removed = calendar.removeById(removeId);
-                if (removed) {
-                    System.out.println("Event with ID " + removeId + " removed.");
-                } else {
-                    System.out.println("Event with ID " + removeId + " not found.");
-                    System.exit(1);
-                }
-                return;
-            }
-
-            if (removeName != null && !removeName.isBlank()) {
-                boolean removed = calendar.removeByName(removeName);
-                if (removed) {
-                    System.out.println("Event with name " + removeName + " removed.");
-                } else  {
-                    System.out.println("Event with name " + removeName + " not found.");
-                    System.exit(1);
-                }
-                return;
-            }
-
-            List<Event> pastEvents = calendar.getPast(past);
-            List<Event> upcomingEvents = calendar.getUpcoming(show);
-
-            if (!pastEvents.isEmpty()) {
-                System.out.println("Past " + pastEvents.size() + " events:");
-                for (int i = 0; i < pastEvents.size(); i++) {
-                    Event event = pastEvents.get(i);
-                    System.out.println(i + 1 + "." + " " + event.toString());
-                }
-            } else {
-                System.out.println("No past events found.");
-            }
-
-            if (!upcomingEvents.isEmpty()) {
-                System.out.println("Upcoming " + upcomingEvents.size() + " events:");
-                for (int i = 0; i < upcomingEvents.size(); i++) {
-                    Event event = upcomingEvents.get(i);
-                    System.out.println(i + 1 + "." + " " + event.toString());
-                }
-            } else  {
-                System.out.println("No upcoming events found.");
-            }
-
         } catch (Exception e) {
             System.err.println("Error " + e.getMessage());
             System.exit(1);
