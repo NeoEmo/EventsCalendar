@@ -51,7 +51,7 @@ public class CalendarTest {
         calendar.add(name2, date2);
 
         String id = calendar.getIdByName(name).orElseThrow();
-        assertEquals(Optional.empty(), calendar.getIdByName(name+name2));
+        assertEquals(Optional.empty(), calendar.getIdByName(name + name2));
         assertTrue(calendar.removeById(id));
         assertFalse(calendar.removeById(id));
 
