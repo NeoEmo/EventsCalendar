@@ -133,7 +133,7 @@ public class AppTest {
         assertEquals(0, pastEvents.size());
 
         String removeName = "I don't exist";
-        String[] args = {"-rn", removeName , "-f", filePath};
+        String[] args = {"-rn", removeName, "-f", filePath};
     }
 
     @Test
