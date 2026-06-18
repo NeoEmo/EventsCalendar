@@ -51,8 +51,7 @@ public class App implements  Runnable {
         System.exit(exitCode);
     }
 
-    @Override
-    public void run() {
+    private String mode() {
         String mode;
 
         if (add) {
@@ -66,10 +65,15 @@ public class App implements  Runnable {
         } else {
             mode = "show";
         }
+        return mode;
+    }
+
+    @Override
+    public void run() {
 
         try {
             Calendar calendar = new Calendar(filePath);
-            switch (mode) {
+            switch (mode()) {
                 case "add":
                     if (name == null || date == null) {
                         System.err.println("Error: --add requires --name and --date");
