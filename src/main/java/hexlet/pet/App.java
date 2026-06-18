@@ -78,7 +78,7 @@ public class App implements  Runnable {
             switch (mode()) {
                 case "add":
                     if (name == null || date == null) {
-                        logger.info("Error: --add requires --name and --date");
+                        logger.warning("Error: --add requires --name and --date");
                         System.exit(1);
                     }
                     LocalDateTime dateTime = date.atStartOfDay();
@@ -96,7 +96,7 @@ public class App implements  Runnable {
                     if (removed) {
                         logger.info("Event with ID " + removeId + " removed.");
                     } else  {
-                        logger.info("Event with ID " + removeId + " not found.");
+                        logger.warning("Event with ID " + removeId + " not found.");
                         System.exit(1);
                     }
                     break;
@@ -106,7 +106,7 @@ public class App implements  Runnable {
                     if (removedName) {
                         logger.info("Event with name " + removeName + " removed.");
                     } else {
-                        logger.info("Event with name " + removeName + " not found.");
+                        logger.warning("Event with name " + removeName + " not found.");
                         System.exit(1);
                     }
                     break;
@@ -119,28 +119,28 @@ public class App implements  Runnable {
                         logger.info("Past " + pastEvents.size() + " events:");
                         for (int i = 0; i < pastEvents.size(); i++) {
                             Event pastEvent = pastEvents.get(i);
-                            logger.info(i + 1 + ". " + pastEvent.toString());
+                            System.out.println(i + 1 + ". " + pastEvent.toString());
                         }
                     } else {
-                        logger.info("No past events found.");
+                        logger.warning("No past events found.");
                     }
 
                     if (!upcomingEvents.isEmpty()) {
                         logger.info("Upcoming " + upcomingEvents.size() + " events:");
                         for (int i = 0; i < upcomingEvents.size(); i++) {
                             Event upcomingEvent = upcomingEvents.get(i);
-                            logger.info(i + 1 + ". " + upcomingEvent.toString());
+                            System.out.println(i + 1 + ". " + upcomingEvent.toString());
                         }
                     } else  {
-                        logger.info("No upcoming events found.");
+                        logger.warning("No upcoming events found.");
                     }
                     break;
 
                 default:
-                    logger.info("Error: invalid command line options");
+                    logger.warning("Error: invalid command line options");
             }
         } catch (Exception e) {
-            logger.info("Error " + e.getMessage());
+            logger.warning("Error " + e.getMessage());
             System.exit(1);
         }
     }
