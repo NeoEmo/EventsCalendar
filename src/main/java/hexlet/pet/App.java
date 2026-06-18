@@ -85,11 +85,13 @@ public class App implements  Runnable {
     }
 
     private void clearEvents() throws IOException {
+        calendar = new Calendar(filePath);
         calendar.clear();
         logger.info("All events are removed.");
     }
 
     private void removeIdEvents() throws IOException {
+        calendar = new Calendar(filePath);
         boolean removed = calendar.removeById(removeId);
         if (removed) {
             logger.info("Event with ID " + removeId + " removed.");
@@ -100,6 +102,7 @@ public class App implements  Runnable {
     }
 
     private void removeNameEvents() throws IOException {
+        calendar = new Calendar(filePath);
         boolean removedName = calendar.removeByName(removeName);
         if (removedName) {
             logger.info("Event with name " + removeName + " removed.");
@@ -110,6 +113,7 @@ public class App implements  Runnable {
     }
 
     private void showEvents() throws IOException {
+        calendar = new Calendar(filePath);
         List<Event> pastEvents = calendar.getPast(past);
         List<Event> upcomingEvents = calendar.getUpcoming(show);
 
@@ -137,7 +141,6 @@ public class App implements  Runnable {
     @Override
     public void run() {
         try {
-            Calendar calendar = new Calendar(filePath);
             switch (mode()) {
                 case "add":
                     addEvent();
