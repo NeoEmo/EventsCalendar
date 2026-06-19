@@ -50,6 +50,15 @@ public class App implements  Runnable {
     @Option(names = {"-c", "--clear"}, description = "Remove all events")
     private boolean clear;
 
+    @Option(names = {"-e", "--edit"}, description = "The ID of the event to be edited")
+    private String editId;
+
+    @Option(names = {"-ed", "--editDate"}, description = "edit some event Date")
+    private LocalDate editDate;
+
+    @Option(names = {"-en", "--editName"}, description = "edit some event Name")
+    private String editName;
+
     public static void main(String[] args) {
         int exitCode = new CommandLine(new App()).execute(args);
         System.exit(exitCode);
@@ -66,6 +75,10 @@ public class App implements  Runnable {
             mode = "removeId";
         } else if (removeName != null && !removeName.isBlank()) {
             mode = "removeName";
+        } else if (editDate != null) {
+            return "editDate";
+        }  else if (editName != null && !editName.isBlank()) {
+            return "editName";
         } else {
             mode = "show";
         }
@@ -138,6 +151,40 @@ public class App implements  Runnable {
         }
     }
 
+    private void editDateEvent() throws IOException {
+        Calendar calendar = new Calendar(filePath);
+        if (editDate == null) {
+            logger.severe("Error: --edit requires --editDate");
+            System.exit(1);
+        }
+        var newDateTime = editDate.atStartOfDay();
+        boolean updated = calendar.editDate(editId, newDateTime);
+
+        if (updated) {
+            logger.severe("Event with ID " + editId + " updated.");
+        } else  {
+            logger.warning("Event with ID " + editId + " not found.");
+            System.exit(1);
+        }
+    }
+
+    private void editNameEvent() throws IOException {
+        Calendar calendar = new Calendar(filePath);
+        if (editName == null) {
+            logger.severe("Error: --edit requires --editName");
+            System.exit(1);
+        }
+        var newName = editName.trim();
+        boolean updated = calendar.editName(editId, newName);
+
+        if (updated) {
+            logger.severe("Event with ID " + editId + " updated.");
+        } else   {
+            logger.warning("Event with ID " + editId + " not found.");
+            System.exit(1);
+        }
+    }
+
     @Override
     public void run() {
         try {
@@ -156,6 +203,14 @@ public class App implements  Runnable {
 
                 case "removeName":
                     removeNameEvents();
+                    break;
+
+                case "editDate":
+                    editDateEvent();
+                    break;
+
+                case "editName":
+                    editNameEvent();
                     break;
 
                 case "show":
