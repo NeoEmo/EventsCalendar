@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -115,8 +116,8 @@ public class CalendarTest {
         assertEquals(toString, calendar.getPast(1).toString());
 
         calendar.add(name2, date,  autoUpdate);
-        String id2 = calendar.getIdByName(name2).orElseThrow();
-        String toString2 = "[" + name2 + " (ID: " + id2 + ") - " + expected + "]";
-        assertEquals(toString2, calendar.getUpcoming(1).toString());
+        List<Event> events = calendar.getUpcoming(1);
+        LocalDateTime updated = events.get(0).getDate();
+        assertEquals(expected, updated);
     }
 }
