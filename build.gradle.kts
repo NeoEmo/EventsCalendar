@@ -35,6 +35,12 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
 
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2")
+
+    // Source: https://mvnrepository.com/artifact/org.telegram/telegrambots-longpolling
+    implementation("org.telegram:telegrambots-longpolling:10.0.0")
+
+    // Source: https://mvnrepository.com/artifact/org.telegram/telegrambots-client
+    implementation("org.telegram:telegrambots-client:10.0.0")
 }
 
 tasks.test {
