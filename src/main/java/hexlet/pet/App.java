@@ -96,7 +96,7 @@ public class App implements  Runnable {
             System.exit(1);
         }
         LocalDateTime dateTime = date.atStartOfDay();
-        if(autoUpdate) {
+        if (autoUpdate) {
             calendar.add(name, dateTime, true);
         } else {
             calendar.add(name, dateTime);
