@@ -30,11 +30,26 @@ public class Calendar {
         if (!file.exists()) {
             return new ArrayList<>();
         }
+        List<Event> events;
         try {
-            return mapper.readValue(file, new TypeReference<List<Event>>() { });
+            events = mapper.readValue(file, new TypeReference<List<Event>>() { });
         } catch (MismatchedInputException e) {
             return new ArrayList<>();
         }
+
+        boolean changed = false;
+        LocalDateTime now = LocalDateTime.now();
+        for (Event event : events) {
+            if (event.isAutoUpdate() && event.getDate().isBefore(now)) {
+                event.setDate(event.getDate().plusYears(1));
+                changed = true;
+            }
+        }
+
+        if (changed) {
+            saveEvents(events);
+        }
+        return events;
     }
 
     private void saveEvents(List<Event> events) throws IOException {
@@ -42,8 +57,12 @@ public class Calendar {
     }
 
     public boolean add(String name, LocalDateTime date) throws IOException {
+        return add(name, date, false);
+    }
+
+    public boolean add(String name, LocalDateTime dateTime, boolean autoUpdate) throws IOException {
         List<Event> events = loadEvents();
-        events.add(new Event(name, date));
+        events.add(new Event(name, dateTime, autoUpdate));
         saveEvents(events);
         return true;
     }
