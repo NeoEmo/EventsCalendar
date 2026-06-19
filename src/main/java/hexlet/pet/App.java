@@ -107,9 +107,9 @@ public class App implements  Runnable {
         calendar = new Calendar(filePath);
         boolean removed = calendar.removeById(removeId);
         if (removed) {
-            logger.info("Event with ID " + removeId + " removed.");
+            System.out.println("Event with ID " + removeId + " removed.");
         } else  {
-            logger.warning("Event with ID " + removeId + " not found.");
+            System.out.println("Event with ID " + removeId + " not found.");
             System.exit(1);
         }
     }
@@ -118,9 +118,9 @@ public class App implements  Runnable {
         calendar = new Calendar(filePath);
         boolean removedName = calendar.removeByName(removeName);
         if (removedName) {
-            logger.info("Event with name " + removeName + " removed.");
+            System.out.println("Event with name " + removeName + " removed.");
         } else {
-            logger.warning("Event with name " + removeName + " not found.");
+            System.out.println("Event with name " + removeName + " not found.");
             System.exit(1);
         }
     }
@@ -131,7 +131,7 @@ public class App implements  Runnable {
         List<Event> upcomingEvents = calendar.getUpcoming(show);
 
         if (!pastEvents.isEmpty()) {
-            logger.info("Past " + pastEvents.size() + " events:");
+            System.out.println("Past " + pastEvents.size() + " events:");
             for (int i = 0; i < pastEvents.size(); i++) {
                 Event pastEvent = pastEvents.get(i);
                 System.out.println(i + 1 + ". " + pastEvent.toString());
@@ -141,7 +141,7 @@ public class App implements  Runnable {
         }
 
         if (!upcomingEvents.isEmpty()) {
-            logger.info("Upcoming " + upcomingEvents.size() + " events:");
+            System.out.println("Upcoming " + upcomingEvents.size() + " events:");
             for (int i = 0; i < upcomingEvents.size(); i++) {
                 Event upcomingEvent = upcomingEvents.get(i);
                 System.out.println(i + 1 + ". " + upcomingEvent.toString());
@@ -152,35 +152,35 @@ public class App implements  Runnable {
     }
 
     private void editDateEvent() throws IOException {
-        Calendar calendar = new Calendar(filePath);
+        calendar = new Calendar(filePath);
         if (editDate == null) {
-            logger.severe("Error: --edit requires --editDate");
+            logger.warning("Error: --edit requires --editDate");
             System.exit(1);
         }
         var newDateTime = editDate.atStartOfDay();
         boolean updated = calendar.editDate(editId, newDateTime);
 
         if (updated) {
-            logger.severe("Event with ID " + editId + " updated.");
+            System.out.println("Event with ID " + editId + " updated.");
         } else  {
-            logger.warning("Event with ID " + editId + " not found.");
+            System.out.println("Event with ID " + editId + " not found.");
             System.exit(1);
         }
     }
 
     private void editNameEvent() throws IOException {
-        Calendar calendar = new Calendar(filePath);
+        calendar = new Calendar(filePath);
         if (editName == null) {
-            logger.severe("Error: --edit requires --editName");
+            logger.warning("Error: --edit requires --editName");
             System.exit(1);
         }
         var newName = editName.trim();
         boolean updated = calendar.editName(editId, newName);
 
         if (updated) {
-            logger.severe("Event with ID " + editId + " updated.");
+            System.out.println("Event with ID " + editId + " updated.");
         } else   {
-            logger.warning("Event with ID " + editId + " not found.");
+            System.out.println("Event with ID " + editId + " not found.");
             System.exit(1);
         }
     }
