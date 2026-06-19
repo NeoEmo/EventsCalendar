@@ -91,4 +91,4 @@ editDate:
 	.\build\install\EventsCalendar\bin\EventsCalendar -e "$(ID)" -ed "$(EDIT_DATE)" $(OPTIONAL)
 
 win-help:
-	.\build\instaldl\EventsCalendar\bin\EventsCalendar -h
+	.\build\install\EventsCalendar\bin\EventsCalendar -h
