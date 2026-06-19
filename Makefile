@@ -19,7 +19,7 @@
 # SHOW= количество значений последующих событий, которые вы хотите отобразить (по-умолчанию 3)
 # PAST= количество предыдущих событий, которые вы хотите отобразить (по-умолчанию 3)
 
-# ЭКСПЕРИМЕНТАЛЬНЫЙ АРГУМЕНТ:
+# ЭКСПЕРИМЕНТАЛЬНЫЙ АРГУМЕНТЫ:
 # OPTIONAL= Он позволяет сделать программу более гибкой к настройке, но если вы рядовой юзер, то лучше
 # не использовать, т.к. есть шанс что вы что-то можете сломать. Как он работает:
 # 1) Вам например хочется создать события не в event.json, а например в 123.json.
@@ -29,6 +29,12 @@
 # но благодаря этому, например, можно разделить условно на birthday.json и rockFestivalEvents.json
 # и смотреть, редактировать, править их по-отдельности.
 # Ниже представлены команды для linux и windows:
+#
+# AUTO_UPDATE= Необязательный аргумент, который добавляет функцию автообновления события на год
+# (Например, если добавить 2025-12-25 с этим флагом, а сейчас 2026, то он сразу напишет 2026-12-25. Или другой
+# пример, дни рождения, они происходят раз в год, т.е. вы добавили чей-то день рождения, отпраздновали его,
+# а программа сама обновило в json дату на следующий год (Но, т.к. программа сейчас нигде не крутится,
+# то всё завязано на обновлении json файла какое-либо))
 
 #for linux
 
@@ -36,7 +42,7 @@
 .PHONY: win-add win-clear win-remove win-removeByName win-upcoming win-past win-help
 
 add:
-	./build/install/EventsCalendar/bin/EventsCalendar -a -n "$(NAME)" -d "$(DATE)" $(OPTIONAL)
+	./build/install/EventsCalendar/bin/EventsCalendar -a -n "$(NAME)" -d "$(DATE)" $(if $(AUTO_UPDATE),-au,) $(OPTIONAL)
 
 clear:
 	./build/install/EventsCalendar/bin/EventsCalendar -c $(OPTIONAL)
@@ -66,7 +72,7 @@ help:
 #for windows
 
 win-add:
-	.\build\install\EventsCalendar\bin\EventsCalendar -a -n "$(NAME)" -d "$(DATE)" $(OPTIONAL)
+	.\build\install\EventsCalendar\bin\EventsCalendar -a -n "$(NAME)" -d "$(DATE)" $(if $(AUTO_UPDATE),-au,) $(OPTIONAL)
 
 win-clear:
 	.\build\install\EventsCalendar\bin\EventsCalendar -c $(OPTIONAL)
