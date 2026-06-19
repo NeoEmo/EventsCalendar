@@ -7,13 +7,21 @@ public class Event {
     private String id;
     private String name;
     private LocalDateTime date;
+    private boolean isAutoUpdate;
 
     public  Event() { }
-
     public Event(String name, LocalDateTime date) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
         this.date = date;
+        this.isAutoUpdate = false;
+    }
+
+    public Event(String name, LocalDateTime date, boolean isAutoUpdate) {
+        this.id = UUID.randomUUID().toString();
+        this.name = name;
+        this.date = date;
+        this.isAutoUpdate = isAutoUpdate;
     }
 
     public String getId() {
@@ -38,6 +46,14 @@ public class Event {
 
     public void setDate(LocalDateTime date) {
         this.date = date;
+    }
+
+    public boolean isAutoUpdate() {
+        return isAutoUpdate;
+    }
+
+    public void setAutoUpdate(boolean autoUpdate) {
+        isAutoUpdate = autoUpdate;
     }
 
     @Override
