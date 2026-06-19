@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -176,6 +177,43 @@ public class AppTest {
         String[] args2 = {"-p", "3", "-f", filePath};
         int exitCode2 = new CommandLine(new App()).execute(args2);
         assertEquals(0, exitCode2);
+    }
+
+    @Test
+    public void testEditEvent() throws IOException {
+        var name = "my test event";
+        var date = LocalDate.now().minusMonths(1);
+
+        var name2 = "my test edit event";
+        var date2 = LocalDate.now().minusMonths(2);
+
+        String[] args = {"-a", "-n", name, "-d", date.toString(), "-f", filePath};
+        int exitCode = new CommandLine(new App()).execute(args);
+        assertEquals(0, exitCode);
+
+        Calendar calendar = new Calendar(filePath);
+        List<Event> events = calendar.getPast(5);
+        String id = events.get(0).getId();
+        assertEquals(1, events.size());
+
+        String[] args2 = {"-e", id, "-en", name2, "-f", filePath};
+        int exitCode2 = new CommandLine(new App()).execute(args2);
+        assertEquals(0, exitCode2);
+
+        events = calendar.getPast(5);
+        assertEquals(1, events.size());
+        assertEquals(name2, events.get(0).getName());
+
+        String[] args3 = {"-e", id, "-ed", date2.toString(), "-f", filePath};
+        int exitCode3 = new CommandLine(new App()).execute(args3);
+        assertEquals(0, exitCode3);
+
+        events = calendar.getPast(5);
+        var dateTime = date2.atStartOfDay();
+        LocalDateTime dateTimeEvent = events.get(0).getDate();
+        assertEquals(1, events.size());
+        assertEquals(name2, events.get(0).getName());
+        assertEquals(dateTime.toString(), dateTimeEvent.toString());
     }
 
 //     Эти два теста на данный момент не рабочие, но они добавлены, мб потом перепишу App
