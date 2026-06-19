@@ -77,4 +77,27 @@ public class CalendarTest {
         assertEquals(toString, calendar.getPast(1).toString());
         assertEquals(toString2, calendar.getUpcoming(1).toString());
     }
+
+    @Test
+    public void getEditedTest() throws IOException {
+        var name = "my test name";
+        var date =  LocalDateTime.now().minusDays(1);
+
+        var name2 = "my edited test name";
+        var date2 =  LocalDateTime.now().minusMonths(1).minusDays(1);
+
+        calendar.add(name, date);
+        String id = calendar.getIdByName(name).orElseThrow();
+
+        String toString = "[" + name + " (ID: " + id + ") - " + date + "]";
+        assertEquals(toString, calendar.getPast(1).toString());
+
+        calendar.editDate(id, date2);
+        String toString2 = "[" + name + " (ID: " + id + ") - " + date2 + "]";
+        assertEquals(toString2, calendar.getPast(1).toString());
+
+        calendar.editName(id, name2);
+        String toString3 = "[" + name2 + " (ID: " + id + ") - " + date2 + "]";
+        assertEquals(toString3, calendar.getPast(1).toString());
+    }
 }
