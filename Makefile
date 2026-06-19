@@ -5,11 +5,15 @@
 # removeByName/win-removeByName - удаление события по имени (по-умолчанию в event.json)
 # upcoming/win-upcoming - показать 3 события, которые скоро будут  (по-умолчанию в event.json)
 # past/win-past - показать 3 предыдущих события (по-умолчанию в event.json)
+# editName - отредактировать имя события по ID (по-умолчанию в event.json)
+# editDate - отредактировать дату события по ID (по-умолчанию в event.json)
 # help/win-help - отобразить справку
 
 # АРГУМЕНТЫ:
 # NAME="Имя события"
 # REMOVE_NAME="Имя события, которое вы хотите удалить"
+# EDIT_NAME="Новое имя события"
+# EDIT_DATE= Новая дата события в виде YYYY-MM-DD (ГОД-МЕСЯЦ-ЧИСЛО)
 # DATE= дата события в виде YYYY-MM-DD (ГОД-МЕСЯЦ-ЧИСЛО)
 # ID= ID события, который вы хотите удалить
 # SHOW= количество значений последующих событий, которые вы хотите отобразить (по-умолчанию 3)
@@ -49,6 +53,13 @@ upcoming:
 past:
 	./build/install/EventsCalendar/bin/EventsCalendar -p $(or $(PAST), 3) $(OPTIONAL)
 
+editName:
+	./build/install/EventsCalendar/bin/EventsCalendar -e "$(ID)" -en "$(EDIT_NAME)" $(OPTIONAL)
+
+editDate:
+
+	./build/install/EventsCalendar/bin/EventsCalendar -e "$(ID)" -ed "$(EDIT_DATE)" $(OPTIONAL)
+
 help:
 	./build/install/EventsCalendar/bin/EventsCalendar -h
 
@@ -71,6 +82,13 @@ win-upcoming:
 
 win-past:
 	.\build\install\EventsCalendar\bin\EventsCalendar -p $(or $(PAST), 3) $(OPTIONAL)
+
+editName:
+	.\build\install\EventsCalendar\bin\EventsCalendar -e "$(ID)" -en "$(EDIT_NAME)" $(OPTIONAL)
+
+editDate:
+
+	.\build\install\EventsCalendar\bin\EventsCalendar -e "$(ID)" -ed "$(EDIT_DATE)" $(OPTIONAL)
 
 win-help:
 	.\build\instaldl\EventsCalendar\bin\EventsCalendar -h
