@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class EventTest {
 
@@ -62,5 +63,20 @@ public class EventTest {
         event.setId(id);
         var toString = name + " (ID: " + id + ") - " + date;
         assertEquals(toString, event.toString());
+    }
+
+    @Test
+    public void testEvent5() {
+        var name = "this is a test name";
+        var date = LocalDateTime.now();
+        var autoUpdate = true;
+        Event event = new Event(name, date, autoUpdate);
+
+        assertEquals(name, event.getName());
+        assertEquals(date, event.getDate());
+        assertEquals(autoUpdate, event.isAutoUpdate());
+
+        Event notAutoUpdateEvent = new Event(name, date);
+        assertFalse(notAutoUpdateEvent.isAutoUpdate());
     }
 }
