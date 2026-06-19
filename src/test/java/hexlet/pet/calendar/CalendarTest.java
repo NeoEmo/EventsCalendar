@@ -107,7 +107,7 @@ public class CalendarTest {
         var name = "my test name";
         var name2 = "my updated test name";
         var date =  LocalDateTime.now().minusDays(1);
-        var expected = LocalDateTime.now().minusDays(1).plusYears(1);
+        var expected = date.plusYears(1);
         var autoUpdate = true;
 
         calendar.add(name, date);
