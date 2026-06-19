@@ -100,4 +100,23 @@ public class CalendarTest {
         String toString3 = "[" + name2 + " (ID: " + id + ") - " + date2 + "]";
         assertEquals(toString3, calendar.getPast(1).toString());
     }
+
+    @Test
+    public void updateTest() throws IOException {
+        var name = "my test name";
+        var name2 = "my updated test name";
+        var date =  LocalDateTime.now().minusDays(1);
+        var expected = LocalDateTime.now().minusDays(1).plusYears(1);
+        var autoUpdate = true;
+
+        calendar.add(name, date);
+        String id = calendar.getIdByName(name).orElseThrow();
+        String toString = "[" + name + " (ID: " + id + ") - " + date + "]";
+        assertEquals(toString, calendar.getPast(1).toString());
+
+        calendar.add(name2, date,  autoUpdate);
+        String id2 = calendar.getIdByName(name2).orElseThrow();
+        String toString2 = "[" + name2 + " (ID: " + id2 + ") - " + expected + "]";
+        assertEquals(toString2, calendar.getUpcoming(1).toString());
+    }
 }
