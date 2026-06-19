@@ -66,6 +66,40 @@ public class Calendar {
         return removed;
     }
 
+    public boolean editName(String id, String newName)  throws IOException {
+        List<Event> events = loadEvents();
+        boolean found = events.stream()
+                .filter(event -> event.getId().equals(id))
+                .findFirst()
+                .map(event -> {
+                    event.setName(newName);
+                    return true;
+                })
+                .orElse(false);
+
+        if (found) {
+            saveEvents(events);
+        }
+        return found;
+    }
+
+    public boolean editDate(String id, LocalDateTime date) throws IOException {
+        List<Event> events = loadEvents();
+        boolean found = events.stream()
+                .filter(event -> event.getId().equals(id))
+                .findFirst()
+                .map(event ->  {
+                    event.setDate(date);
+                    return true;
+                })
+                .orElse(false);
+
+        if (found) {
+            saveEvents(events);
+        }
+        return found;
+    }
+
     public boolean clear() throws IOException {
         saveEvents(new ArrayList<>());
         return true;
