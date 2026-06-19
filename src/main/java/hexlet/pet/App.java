@@ -22,7 +22,7 @@ public class App implements  Runnable {
     Logger logger =  Logger.getLogger(App.class.getName());
     Calendar calendar;
 
-    @Option(names = {"-a", "--add"}, description = "add new event")
+    @Option(names = {"-a", "--add"}, description = "Add new event")
     private boolean add;
 
     @Option(names = {"-n", "--name"}, description = "Event name")
@@ -31,20 +31,20 @@ public class App implements  Runnable {
     @Option(names = {"-d", "--date"}, description = "Date (yyyy-MM-dd)")
     private LocalDate date;
 
-    @Option(names = {"-s", "--show"}, description = "show near events (default: 3 upcoming ones)")
+    @Option(names = {"-s", "--show"}, description = "Show near events (default: 3 upcoming ones)")
     private int show = 3;
 
-    @Option(names = {"-p", "--past"}, description = "show past events (default: 3 past events)")
+    @Option(names = {"-p", "--past"}, description = "Show past events (default: 3 past events)")
     private int past = 3;
 
-    @Option(names = {"-f", "--file"}, description = "path to JSON`s (advanced option, if you need)",
+    @Option(names = {"-f", "--file"}, description = "Path to JSON`s (advanced option, if you need)",
             defaultValue = "event.json")
     private String filePath;
 
-    @Option(names = {"-r", "--remove"}, description = "remove some event by ID")
+    @Option(names = {"-r", "--remove"}, description = "Remove some event by ID")
     private String removeId;
 
-    @Option(names = {"-rn", "--removeByName"}, description = "remove some event by name")
+    @Option(names = {"-rn", "--removeByName"}, description = "Remove some event by name")
     private String removeName;
 
     @Option(names = {"-c", "--clear"}, description = "Remove all events")
@@ -53,11 +53,14 @@ public class App implements  Runnable {
     @Option(names = {"-e", "--edit"}, description = "The ID of the event to be edited")
     private String editId;
 
-    @Option(names = {"-ed", "--editDate"}, description = "edit some event Date")
+    @Option(names = {"-ed", "--editDate"}, description = "Edit some event Date")
     private LocalDate editDate;
 
-    @Option(names = {"-en", "--editName"}, description = "edit some event Name")
+    @Option(names = {"-en", "--editName"}, description = "Edit some event Name")
     private String editName;
+
+    @Option(names = {"-au", "--autoUpdate"}, description = "Enable auto Update flag")
+    private boolean autoUpdate;
 
     public static void main(String[] args) {
         int exitCode = new CommandLine(new App()).execute(args);
@@ -93,7 +96,11 @@ public class App implements  Runnable {
             System.exit(1);
         }
         LocalDateTime dateTime = date.atStartOfDay();
-        calendar.add(name, dateTime);
+        if(autoUpdate) {
+            calendar.add(name, dateTime, true);
+        } else {
+            calendar.add(name, dateTime);
+        }
         System.out.println("Event added: " + name + " on " + dateTime);
     }
 
