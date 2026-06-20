@@ -246,9 +246,9 @@ public class App implements  Runnable {
 
     private static Path getConfigPath() {
         try {
-            String jarPath = App.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+            URI jarURI = App.class.getProtectionDomain().getCodeSource().getLocation().toURI();
 
-            Path jarDir = Paths.get(jarPath).getParent();
+            Path jarDir = Paths.get(jarURI).getParent();
             Path binDir = jarDir.resolveSibling("bin");
             return binDir.resolve("integration.properties");
         } catch (URISyntaxException e) {
