@@ -47,6 +47,9 @@
 # ОН ТАК НЕ РАБОТАЕТ!!!
 # Лучше передайте AUTO_UPDATE=1
 
+# CHAT_ID= Идентификатор чата для интеграции с телеграм ботом, в теории можно и без него отлично работать с программой
+# Про то, как работать с ботом - инициализация чата написана в helpIntegration, как в самом чате есть /help с командами
+
 #for linux
 
 .PHONY: add clear remove removeByName upcoming past help editName editDate
@@ -74,8 +77,13 @@ editName:
 	./build/install/EventsCalendar/bin/EventsCalendar -e "$(ID)" -en "$(EDIT_NAME)" $(OPTIONAL)
 
 editDate:
-
 	./build/install/EventsCalendar/bin/EventsCalendar -e "$(ID)" -ed "$(EDIT_DATE)" $(OPTIONAL)
+
+integrationHelp:
+	./build/install/EventsCalendar/bin/EventsCalendar -t
+
+integration:
+	./build/install/EventsCalendar/bin/EventsCalendar -t -i "$(CHAT_ID)"
 
 help:
 	./build/install/EventsCalendar/bin/EventsCalendar -h
@@ -103,12 +111,18 @@ win-upcoming:
 win-past:
 	.\build\install\EventsCalendar\bin\EventsCalendar -p $(or $(PAST), 3) $(OPTIONAL)
 
-editName:
+win-editName:
 	.\build\install\EventsCalendar\bin\EventsCalendar -e "$(ID)" -en "$(EDIT_NAME)" $(OPTIONAL)
 
-editDate:
+win-editDate:
 
 	.\build\install\EventsCalendar\bin\EventsCalendar -e "$(ID)" -ed "$(EDIT_DATE)" $(OPTIONAL)
+
+win-integrationHelp:
+	.\build\install\EventsCalendar\bin\EventsCalendar -t
+
+win-integration:
+	.\build\install\EventsCalendar\bin\EventsCalendar -t -i "$(CHAT_ID)"
 
 win-help:
 	.\build\install\EventsCalendar\bin\EventsCalendar -h
