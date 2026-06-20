@@ -28,6 +28,8 @@ import java.util.logging.Logger;
 public class App implements  Runnable {
     Logger logger =  Logger.getLogger(App.class.getName());
     Calendar calendar;
+    private final String eventWithId = "Event with ID ";
+    private final String notFound = " not found.";
 
     @Option(names = {"-a", "--add"}, description = "Add new event")
     private boolean add;
@@ -129,9 +131,9 @@ public class App implements  Runnable {
         calendar = new Calendar(filePath);
         boolean removed = calendar.removeById(removeId);
         if (removed) {
-            System.out.println("Event with ID " + removeId + " removed.");
+            System.out.println(eventWithId + removeId + " removed.");
         } else  {
-            System.out.println("Event with ID " + removeId + " not found.");
+            System.out.println(eventWithId + removeId + notFound);
             System.exit(1);
         }
     }
@@ -142,7 +144,7 @@ public class App implements  Runnable {
         if (removedName) {
             System.out.println("Event with name " + removeName + " removed.");
         } else {
-            System.out.println("Event with name " + removeName + " not found.");
+            System.out.println("Event with name " + removeName + notFound);
             System.exit(1);
         }
     }
@@ -183,9 +185,9 @@ public class App implements  Runnable {
         boolean updated = calendar.editDate(editId, newDateTime);
 
         if (updated) {
-            System.out.println("Event with ID " + editId + " updated.");
+            System.out.println(eventWithId + editId + " updated.");
         } else  {
-            System.out.println("Event with ID " + editId + " not found.");
+            System.out.println(eventWithId + editId + notFound);
             System.exit(1);
         }
     }
@@ -200,9 +202,9 @@ public class App implements  Runnable {
         boolean updated = calendar.editName(editId, newName);
 
         if (updated) {
-            System.out.println("Event with ID " + editId + " updated.");
+            System.out.println(eventWithId + editId + " updated.");
         } else   {
-            System.out.println("Event with ID " + editId + " not found.");
+            System.out.println(eventWithId + editId + notFound);
             System.exit(1);
         }
     }
