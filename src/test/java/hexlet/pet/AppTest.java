@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AppTest {
     private Path tempFile;
@@ -214,6 +215,13 @@ public class AppTest {
         assertEquals(1, events.size());
         assertEquals(name2, events.get(0).getName());
         assertEquals(dateTime.toString(), dateTimeEvent.toString());
+    }
+
+    @Test
+    void testTelegramIntegrationPrintsHelp() {
+        String[] args = {"-t"};
+        int exitcode = new CommandLine(new App()).execute(args);
+        assertEquals(0, exitcode);
     }
 
 //     Эти два теста на данный момент не рабочие, но они добавлены, мб потом перепишу App
