@@ -3,10 +3,11 @@ plugins {
     id("application")
     id("org.sonarqube") version "7.3.1.8318"
     id("jacoco")
+    id("maven-publish")
 }
 
 group = "hexlet.pet"
-version = "0.5-SNAPSHOT"
+version = "0.5"
 
 application {
     mainClass = "hexlet.pet.App"
@@ -68,5 +69,13 @@ tasks.jacocoTestReport {
     dependsOn(tasks.test)
     reports {
         xml.required = true
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
     }
 }
