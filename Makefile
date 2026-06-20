@@ -8,6 +8,7 @@
 # editName - отредактировать имя события по ID (по-умолчанию в event.json)
 # editDate - отредактировать дату события по ID (по-умолчанию в event.json)
 # help/win-help - отобразить справку
+# test/ win-test - полностью самостоятельно вводите команды (полезно для отладки)
 
 # АРГУМЕНТЫ:
 # NAME="Имя события"
@@ -48,8 +49,8 @@
 
 #for linux
 
-.PHONY: add clear remove removeByName upcoming past help
-.PHONY: win-add win-clear win-remove win-removeByName win-upcoming win-past win-help
+.PHONY: add clear remove removeByName upcoming past help editName editDate
+.PHONY: win-add win-clear win-remove win-removeByName win-upcoming win-past win-help win-editName win-editDate win-test
 
 add:
 	./build/install/EventsCalendar/bin/EventsCalendar -a -n "$(NAME)" -d "$(DATE)" $(if $(AUTO_UPDATE),-au,) $(OPTIONAL)
@@ -78,6 +79,9 @@ editDate:
 
 help:
 	./build/install/EventsCalendar/bin/EventsCalendar -h
+
+test:
+	./build/install/EventsCalendar/bin/EventsCalendar $(OPTIONAL)
 
 #for windows
 
@@ -108,3 +112,6 @@ editDate:
 
 win-help:
 	.\build\install\EventsCalendar\bin\EventsCalendar -h
+
+win-test:
+	.\build\install\EventsCalendar\bin\EventsCalendar $(OPTIONAL)
