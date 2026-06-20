@@ -47,13 +47,9 @@
 # ОН ТАК НЕ РАБОТАЕТ!!!
 # Лучше передайте AUTO_UPDATE=1
 
-# CHAT_ID= Идентификатор чата для интеграции с телеграм ботом, в теории можно и без него отлично работать с программой
-# Про то, как работать с ботом - инициализация чата написана в helpIntegration, так и в самом чате есть /help
-# с командами для бота.
-
 #for linux
 
-.PHONY: add clear remove removeByName upcoming past help editName editDate
+.PHONY: add clear remove removeByName upcoming past help editName editDate test
 .PHONY: win-add win-clear win-remove win-removeByName win-upcoming win-past win-help win-editName win-editDate win-test
 
 add:
@@ -82,9 +78,6 @@ editDate:
 
 integrationHelp:
 	./build/install/EventsCalendar/bin/EventsCalendar -t
-
-integration:
-	./build/install/EventsCalendar/bin/EventsCalendar -t -i "$(CHAT_ID)"
 
 help:
 	./build/install/EventsCalendar/bin/EventsCalendar -h
@@ -121,9 +114,6 @@ win-editDate:
 
 win-integrationHelp:
 	.\build\install\EventsCalendar\bin\EventsCalendar -t
-
-win-integration:
-	.\build\install\EventsCalendar\bin\EventsCalendar -t -i "$(CHAT_ID)"
 
 win-help:
 	.\build\install\EventsCalendar\bin\EventsCalendar -h
