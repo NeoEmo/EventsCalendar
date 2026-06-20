@@ -9,17 +9,11 @@ import picocli.CommandLine.Option;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Properties;
 import java.util.logging.Logger;
 
 @Command(
@@ -223,61 +217,18 @@ public class App implements  Runnable {
 
     private void telegramIntegration() throws IOException {
         calendar = new Calendar(filePath);
-        if (telegram && (integrationID == null ||  integrationID.isBlank())) {
-            int time = 15000;
-            System.out.println("Внимание, включено ожидание прочтения helpIntegration на " + time + " мс");
-            System.out.println(readFixtures("helpIntegration"));
-            try {
-                Thread.sleep(time);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                System.out.println("Ожидание прочтения helpIntegration закончено");
-            }
-            openChatWithBot();
-        } else {
-            boolean isSave = saveIntegrationId(integrationID);
-            if (isSave) {
-                System.out.println("Chat ID проверен и сохранён. Теперь уведомления будут приходить в Telegram.");
-            } else {
-                System.out.println("Неправильно введён Chat ID");
-            }
-        }
-    }
-
-    private static Path getConfigPath() {
+        int time = 12000;
+        System.out.println("Внимание, включено ожидание прочтения helpIntegration на " + time + " мс");
+        System.out.println(readFixtures("helpIntegration"));
         try {
-            URI jarURI = App.class.getProtectionDomain().getCodeSource().getLocation().toURI();
-
-            Path jarDir = Paths.get(jarURI).getParent();
-            Path binDir = jarDir.resolveSibling("bin");
-            return binDir.resolve("integration.properties");
-        } catch (URISyntaxException e) {
-            return Paths.get("integration.properties");
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            System.out.println("Ожидание прочтения helpIntegration закончено");
         }
+        openChatWithBot();
     }
 
-    private boolean saveIntegrationId(String chatID) throws IOException {
-        if (chatID == null || chatID.isBlank()) {
-            System.out.println("Chat ID не может быть пустым");
-            return false;
-        }
-
-        Path configPath = getConfigPath();
-        Files.createDirectories(configPath.getParent());
-
-        Properties props = new Properties();
-        if (Files.exists(configPath)) {
-            try (InputStream is = Files.newInputStream(configPath)) {
-                props.load(is);
-            }
-        }
-
-        props.setProperty("chatID", chatID);
-        try (OutputStream out = Files.newOutputStream(configPath)) {
-            props.store(out, "Telegram Integration settings");
-        }
-        return true;
-    }
 
     private void openChatWithBot() throws IOException {
         String botName = "BotCalendarEventBot";
