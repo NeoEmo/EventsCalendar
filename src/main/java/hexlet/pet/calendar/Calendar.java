@@ -51,11 +51,7 @@ public class Calendar {
         }
         return events;
     }
-
-    public List<Event> parseEventsFromString(String json) throws IOException {
-        return mapper.readValue(json, new TypeReference<List<Event>>() { });
-    }
-
+    
     private void saveEvents(List<Event> events) throws IOException {
         mapper.writeValue(new File(filePath), events);
     }
