@@ -71,9 +71,6 @@ public class App implements  Runnable {
     @Option(names = {"-t", "--telegram"}, description = "open telegram bot and help Integration with bot")
     private boolean telegram;
 
-    @Option(names = {"-i", "--integrationID"}, description = "ID chat with bot")
-    private String integrationID;
-
     public static void main(String[] args) {
         int exitCode = new CommandLine(new App()).execute(args);
         System.exit(exitCode);
