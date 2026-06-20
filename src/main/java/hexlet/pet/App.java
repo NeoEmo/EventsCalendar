@@ -8,6 +8,7 @@ import picocli.CommandLine.Option;
 
 import java.awt.Desktop;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.nio.file.Files;
@@ -221,11 +222,14 @@ public class App implements  Runnable {
     private void telegramIntegration() throws IOException {
         calendar = new Calendar(filePath);
         if (telegram && (integrationID == null ||  integrationID.isBlank())) {
+            int time = 15000;
+            System.out.println("Внимание, включено ожидание прочтения helpIntegration на " + time + " мс");
             System.out.println(readFixture("helpIntegration"));
             try {
-                Thread.sleep(6000);
+                Thread.sleep(time);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
+                System.out.println("Ожидание прочтения helpIntegration закончено");
             }
             openChatWithBot();
         } else {
@@ -251,6 +255,13 @@ public class App implements  Runnable {
 
         Path configPath = Paths.get("src",  "main", "resources", "fixtures", "integration", "integration.properties");
         Properties props = new Properties();
+
+        if (Files.exists(configPath)) {
+            try (InputStream in = Files.newInputStream(configPath)) {
+                props.load(in);
+            }
+        }
+
         props.setProperty("chatID", chatID);
         try (OutputStream out = Files.newOutputStream(configPath)) {
             props.store(out, "Telegram Integration settings");
