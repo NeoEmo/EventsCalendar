@@ -6,10 +6,17 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
+import java.awt.Desktop;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 @Command(
@@ -62,6 +69,12 @@ public class App implements  Runnable {
     @Option(names = {"-au", "--autoUpdate"}, description = "Enable auto Update flag")
     private boolean autoUpdate;
 
+    @Option(names = {"-t", "--telegram"}, description = "open telegram bot and help Integration with bot")
+    private boolean telegram;
+
+    @Option(names = {"-i", "--integrationID"}, description = "ID chat with bot")
+    private String integrationID;
+
     public static void main(String[] args) {
         int exitCode = new CommandLine(new App()).execute(args);
         System.exit(exitCode);
@@ -82,6 +95,8 @@ public class App implements  Runnable {
             return "editDate";
         }  else if (editName != null && !editName.isBlank()) {
             return "editName";
+        } else if (telegram) {
+            return  "telegram";
         } else {
             mode = "show";
         }
@@ -192,6 +207,72 @@ public class App implements  Runnable {
         }
     }
 
+    private static Path getFixturePath(String fileName) {
+        return Paths.get("src", "main", "resources", "fixtures", fileName);
+    }
+
+    private static String readFixture(String fileName) throws IOException {
+        var path = getFixturePath(fileName);
+        return Files.readString(path).trim();
+    }
+
+    private void telegramIntegration() throws IOException {
+        calendar = new Calendar(filePath);
+        if (telegram && (integrationID == null ||  integrationID.isBlank())) {
+            System.out.println(readFixture("helpIntegration"));
+            try {
+                Thread.sleep(6000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            openChatWithBot();
+        } else {
+            boolean isSave = saveIntegrationId(integrationID);
+            if (isSave) {
+                System.out.println("Chat ID проверен и сохранён. Теперь уведомления будут приходить в Telegram.");
+            } else {
+                System.out.println("Неправильно введён Chat ID");
+            }
+        }
+    }
+
+    private boolean saveIntegrationId(String chatID) throws IOException {
+        if (chatID == null || chatID.isBlank()) {
+            System.out.println("Chat ID не может быть пустым");
+            return false;
+        }
+
+        if (!chatID.matches("\\d+")) {
+            System.out.println("Chat ID должен содержать только цифры");
+            return false;
+        }
+
+        Path configPath = Paths.get("src",  "main", "resources", "fixtures", "integration", "integration.properties");
+        Properties props = new Properties();
+        props.setProperty("chatID", chatID);
+        try (OutputStream out = Files.newOutputStream(configPath)) {
+            props.store(out, "Telegram Integration settings");
+        }
+        return true;
+    }
+
+    private void openChatWithBot() throws IOException {
+        String botName = "BotCalendarEventBot";
+        String url = "https://t.me/" + botName;
+        try {
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().browse(new URI(url));
+                System.out.println("Чат с ботом открыт в браузере.");
+            } else {
+                System.out.println("Не удалось открыть бота. попробуйте вручную " + url
+                        + " или напишите автору в тг @ImLunev");
+            }
+        } catch (Exception e) {
+            logger.warning("Ошибка при открытии чата " + e.getMessage());
+            logger.warning("Перейдите по-ссылке вручную" + url + "или напишите автору в тг @ImLunev");
+        }
+    }
+
     @Override
     public void run() {
         try {
@@ -218,6 +299,10 @@ public class App implements  Runnable {
 
                 case "editName":
                     editNameEvent();
+                    break;
+
+                case "telegram":
+                    telegramIntegration();
                     break;
 
                 case "show":
