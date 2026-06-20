@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -210,13 +212,13 @@ public class App implements  Runnable {
         }
     }
 
-    private static Path getFixturePath(String fileName) {
-        return Paths.get("src", "main", "resources", "fixtures", fileName);
-    }
-
-    private static String readFixture(String fileName) throws IOException {
-        var path = getFixturePath(fileName);
-        return Files.readString(path).trim();
+    private static String readFixtures(String fileName) throws IOException {
+        try (InputStream is = App.class.getResourceAsStream("/fixtures/" + fileName)) {
+            if (is == null) {
+                throw new IOException("Не найдены фикстуры " + fileName);
+            }
+            return new String(is.readAllBytes(), StandardCharsets.UTF_8).trim();
+        }
     }
 
     private void telegramIntegration() throws IOException {
@@ -224,7 +226,7 @@ public class App implements  Runnable {
         if (telegram && (integrationID == null ||  integrationID.isBlank())) {
             int time = 15000;
             System.out.println("Внимание, включено ожидание прочтения helpIntegration на " + time + " мс");
-            System.out.println(readFixture("helpIntegration"));
+            System.out.println(readFixtures("helpIntegration"));
             try {
                 Thread.sleep(time);
             } catch (InterruptedException e) {
@@ -242,23 +244,31 @@ public class App implements  Runnable {
         }
     }
 
+    private static Path getConfigPath() {
+        try {
+            String jarPath = App.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+
+            Path jarDir = Paths.get(jarPath).getParent();
+            Path binDir = jarDir.resolveSibling("bin");
+            return binDir.resolve("integration.properties");
+        } catch (URISyntaxException e) {
+            return Paths.get("integration.properties");
+        }
+    }
+
     private boolean saveIntegrationId(String chatID) throws IOException {
         if (chatID == null || chatID.isBlank()) {
             System.out.println("Chat ID не может быть пустым");
             return false;
         }
 
-        if (!chatID.matches("\\d+")) {
-            System.out.println("Chat ID должен содержать только цифры");
-            return false;
-        }
+        Path configPath = getConfigPath();
+        Files.createDirectories(configPath.getParent());
 
-        Path configPath = Paths.get("src",  "main", "resources", "fixtures", "integration", "integration.properties");
         Properties props = new Properties();
-
         if (Files.exists(configPath)) {
-            try (InputStream in = Files.newInputStream(configPath)) {
-                props.load(in);
+            try (InputStream is = Files.newInputStream(configPath)) {
+                props.load(is);
             }
         }
 
