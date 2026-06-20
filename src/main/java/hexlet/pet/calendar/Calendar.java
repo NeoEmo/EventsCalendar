@@ -51,7 +51,7 @@ public class Calendar {
         }
         return events;
     }
-    
+
     private void saveEvents(List<Event> events) throws IOException {
         mapper.writeValue(new File(filePath), events);
     }
