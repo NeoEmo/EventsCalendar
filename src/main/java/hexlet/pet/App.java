@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 @Command(
         name = "EventCalendar",
         mixinStandardHelpOptions = true,
-        version = "EventCalendar 0.5",
+        version = "EventCalendar 0.5.1",
         description = "An events calendar where you can add events and see when the next one is"
 )
 public class App implements  Runnable {
