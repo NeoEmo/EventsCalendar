@@ -1,5 +1,7 @@
 # 📅 EventsCalendar 📅
 
+# ⚠️ Бот в Телеграмме временно не работает и дорабатывается ⚠️
+
 [![SonarQube](https://github.com/NeoEmo/EventsCalendar/actions/workflows/build.yml/badge.svg)](https://github.com/NeoEmo/EventsCalendar/actions/workflows/build.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=NeoEmo_EventsCalendar&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=NeoEmo_EventsCalendar)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=NeoEmo_EventsCalendar&metric=bugs)](https://sonarcloud.io/summary/new_code?id=NeoEmo_EventsCalendar)
