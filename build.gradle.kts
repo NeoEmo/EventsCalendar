@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "hexlet.pet"
-version = "0.5"
+version = "0.5.1"
 
 application {
     mainClass = "hexlet.pet.App"
